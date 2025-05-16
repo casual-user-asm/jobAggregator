@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Jobs for {{ .role }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .job-list {
+            margin-top: 20px;
+        }
+
+        .job {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+
+        .job h2 {
+            margin: 0 0 5px;
+        }
+
+        .job p {
+            margin: 2px 0;
+            color: #555;
+        }
+
+        a.back {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Job Results for "{{ .role }}"</h1>
+
+    <div class="job-list">
+        {{ range .jobs }}
+        <div class="job">
+            <h2>{{ .Title }}</h2>
+            <p><strong>Company:</strong> {{ .Company }}</p>
+            <p><strong>Location:</strong> {{ .Location }}</p>
+        </div>
+        {{ else }}
+        <p>No jobs found for this role.</p>
+        {{ end }}
+    </div>
+
+    <a href="/" class="back">← Back to search</a>
+</body>
+
+</html>
