@@ -1,9 +1,10 @@
 package main
 
 import (
-	"jobAggregator/cmd/server"
+	// "jobAggregator/cmd/server"
+	"jobAggregator/internal/scrapers"
 )
 
 func main() {
-	server.RunServerStuff()
+	scrapers.ParseData()
 }
