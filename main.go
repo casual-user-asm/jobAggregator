@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	for _, link := range scrapers.ParseWorkUa() {
+	for _, link := range scrapers.ParseDjini() {
 		fmt.Println(link)
 	}
 }
