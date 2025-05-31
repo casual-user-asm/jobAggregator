@@ -1,15 +1,20 @@
 package server
 
 import (
+	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
+
+	"jobAggregator/internal/scrapers"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Job struct {
-	Title    string
-	Company  string
-	Location string
+	Title  string `json:"title"`
+	Source string `json:"source"`
+	Link   string `json:"link"`
 }
 
 func RunServerStuff() {
@@ -22,9 +27,18 @@ func RunServerStuff() {
 
 func SearchJob(c *gin.Context) {
 	role := c.Query("role")
-	jobs := []Job{
-		{Title: "Backend Developer", Company: "TechCorp", Location: "Remote"},
-		{Title: "Go Developer", Company: "StartupX", Location: "Berlin"},
+	var jobs []Job
+
+	scrapers.StartScrapers(role)
+
+	data, err := os.ReadFile("data/jobsData.json")
+	if err != nil {
+		fmt.Println("Failed to read file")
+	}
+
+	err = json.Unmarshal(data, &jobs)
+	if err != nil {
+		fmt.Println("Failed to unmarshal json")
 	}
 
 	c.HTML(http.StatusOK, "search.html", gin.H{
