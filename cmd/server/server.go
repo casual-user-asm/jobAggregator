@@ -1,10 +1,8 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 
 	"jobAggregator/internal/scrapers"
 
@@ -27,19 +25,22 @@ func RunServerStuff() {
 
 func SearchJob(c *gin.Context) {
 	role := c.Query("role")
-	var jobs []Job
 
-	scrapers.StartScrapers(role)
-
-	data, err := os.ReadFile("data/jobsData.json")
+	jobs, err := scrapers.StartScrapers(role)
 	if err != nil {
-		fmt.Println("Failed to read file")
+		fmt.Println("Error take data from scrapers")
 	}
+	fmt.Println(jobs)
 
-	err = json.Unmarshal(data, &jobs)
-	if err != nil {
-		fmt.Println("Failed to unmarshal json")
-	}
+	// data, err := os.ReadFile("data/jobsData.json")
+	// if err != nil {
+	// 	fmt.Println("Failed to read file")
+	// }
+
+	// err = json.Unmarshal(data, &jobs)
+	// if err != nil {
+	// 	fmt.Println("Failed to unmarshal json")
+	// }
 
 	c.HTML(http.StatusOK, "search.html", gin.H{
 		"role": role,

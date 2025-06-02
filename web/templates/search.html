@@ -50,13 +50,13 @@
 
     <div class="job-list">
         {{ range .jobs }}
+        {{ range . }}
         <div class="job">
             <h2>{{ .Title }}</h2>
             <p><strong>Source:</strong> {{ .Source }}</p>
             <p><strong>Link:</strong> {{ .Link }}</p>
         </div>
-        {{ else }}
-        <p>No jobs found for this role.</p>
+        {{ end }}
         {{ end }}
     </div>
 

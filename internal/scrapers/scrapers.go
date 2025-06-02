@@ -1,10 +1,9 @@
 package scrapers
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
-	"os"
+
 	"strconv"
 	"strings"
 	"sync"
@@ -222,7 +221,9 @@ func parseRelocateMe(role string) {
 	mu.Unlock()
 }
 
-func StartScrapers(role string) error {
+func StartScrapers(role string) ([][]Job, error) {
+	jobs = [][]Job{}
+
 	allScrapers := []func(string){
 		parseDOU,
 		parseDjini,
@@ -242,10 +243,5 @@ func StartScrapers(role string) error {
 
 	wg.Wait()
 
-	data, err := json.MarshalIndent(jobs, "", "  ")
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile("data/jobsData.json", data, 0644)
+	return jobs, nil
 }
