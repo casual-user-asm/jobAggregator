@@ -18,6 +18,10 @@ type Job struct {
 func RunServerStuff() {
 	router := gin.Default()
 	router.LoadHTMLGlob("web/templates/*")
+	router.Static("/assets", "./web/assets")
+	router.Static("/images", "./web/images")
+	router.StaticFile("/favicon.ico", "./web/assets/favicon.ico")
+
 	router.GET("/", WelcomePage)
 	router.GET("/search", SearchJob)
 	router.Run(":8080")
