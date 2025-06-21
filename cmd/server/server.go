@@ -30,25 +30,33 @@ func RunServerStuff() {
 func SearchJob(c *gin.Context) {
 	role := c.Query("role")
 
-	jobs, err := scrapers.StartScrapers(role)
+	scraperJobs, err := scrapers.StartScrapers(role)
 	if err != nil {
 		fmt.Println("Error take data from scrapers")
 	}
-	fmt.Println(jobs)
 
-	// data, err := os.ReadFile("data/jobsData.json")
-	// if err != nil {
-	// 	fmt.Println("Failed to read file")
-	// }
+	jobsBySource := make(map[string][]Job)
+	hasJobs := false
 
-	// err = json.Unmarshal(data, &jobs)
-	// if err != nil {
-	// 	fmt.Println("Failed to unmarshal json")
-	// }
+	if len(scraperJobs) > 0 {
+		hasJobs = true
 
+		for _, jobList := range scraperJobs {
+			for _, scraperJob := range jobList {
+				job := Job{
+					Title:  scraperJob.Title,
+					Source: scraperJob.Source,
+					Link:   scraperJob.Link,
+				}
+				source := job.Source
+				jobsBySource[source] = append(jobsBySource[source], job)
+			}
+		}
+	}
 	c.HTML(http.StatusOK, "search.html", gin.H{
-		"role": role,
-		"jobs": jobs,
+		"role":         role,
+		"jobsBySource": jobsBySource,
+		"hasJobs":      hasJobs,
 	})
 }
 

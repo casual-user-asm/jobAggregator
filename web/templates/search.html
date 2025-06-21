@@ -3,64 +3,158 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jobs for {{ .role }}</title>
     <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --border-radius: 8px;
+            --box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            line-height: 1.6;
             padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
         }
 
         h1 {
-            color: #333;
+            color: var(--primary-color);
+            margin: 0;
         }
 
-        .job-list {
-            margin-top: 20px;
+        .search-query {
+            background-color: rgba(52, 152, 219, 0.1);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .source-container {
+            margin-bottom: 40px;
+        }
+
+        .source-title {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            margin-bottom: 0;
+        }
+
+        .source-jobs {
+            background-color: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            padding: 1px 20px;
+            box-shadow: var(--box-shadow);
         }
 
         .job {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: 6px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            margin-bottom: 10px;
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
         }
 
-        .job h2 {
-            margin: 0 0 5px;
+        .job:last-child {
+            border-bottom: none;
         }
 
-        .job p {
-            margin: 2px 0;
-            color: #555;
+        .job-title {
+            margin: 0 0 10px;
+            color: var(--text-color);
         }
 
-        a.back {
+        .job-link {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 10px;
+            color: var(--primary-color);
             text-decoration: none;
-            color: #007BFF;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+
+        .job-link:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .back-button {
+                margin-top: 15px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>Job Results for "{{ .role }}"</h1>
+    <header>
+        <h1>Job Results <span class="search-query">{{ .role }}</span></h1>
+        <a href="/" class="back-button">← Back to Search</a>
+    </header>
 
-    <div class="job-list">
-        {{ range .jobs }}
-        {{ range . }}
-        <div class="job">
-            <h2>{{ .Title }}</h2>
-            <p><strong>Source:</strong> {{ .Source }}</p>
-            <p><strong>Link:</strong> {{ .Link }}</p>
+    {{ if .hasJobs }}
+    {{ range $source, $jobs := .jobsBySource }}
+    <div class="source-container">
+        <h2 class="source-title">{{ $source }}</h2>
+        <div class="source-jobs">
+            {{ range $jobs }}
+            <div class="job">
+                <h3 class="job-title">{{ .Title }}</h3>
+                <a href="{{ .Link }}" target="_blank" class="job-link">View Job →</a>
+            </div>
+            {{ end }}
         </div>
-        {{ end }}
-        {{ end }}
     </div>
+    {{ end }}
+    {{ else }}
+    <div class="no-results">
+        <h2>No jobs found</h2>
+        <p>Try searching with different keywords</p>
+    </div>
+    {{ end }}
 
-    <a href="/" class="back">← Back to search</a>
 </body>
 
 </html>

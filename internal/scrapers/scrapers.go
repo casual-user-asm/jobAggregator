@@ -177,6 +177,9 @@ func parseDjini(role string) {
 	}
 
 	for page := 2; page <= maxPage; page++ {
+		if page > 10 {
+			break // Limit to 10 pages
+		}
 		url := fmt.Sprintf("%s&page=%d", url, page)
 		err := c.Visit(url)
 		if err != nil {
